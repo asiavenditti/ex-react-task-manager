@@ -3,19 +3,23 @@ import './App.css'
 import AddTask from './pages/AddTask'
 import TaskList from './pages/TaskList'
 import Navbar from './components/Navbar'
+import GlobalProvider from './context/GlobalContext'
+
 
 function App() {
 
 
   return (
     <>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/task-list" element={<TaskList />} />
-          <Route path="/add-task" element={<AddTask />} />
-        </Routes>
-      </BrowserRouter>
+      <GlobalProvider>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<TaskList />} />
+            <Route path="/add" element={<AddTask />} />
+          </Routes>
+        </BrowserRouter>
+      </GlobalProvider>
     </>
   )
 }

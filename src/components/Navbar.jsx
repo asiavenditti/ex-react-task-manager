@@ -12,7 +12,7 @@ export default function Navbar() {
                         <NavLink className='nav-link d-inline text-white me-3' to='/'>
                             Lista Task
                         </NavLink>
-                        <NavLink className='nav-link d-inline text-white' to='/add-task'>
+                        <NavLink className='nav-link d-inline text-white' to='/add'>
                             Aggiungi Task
                         </NavLink>
                     </div>
