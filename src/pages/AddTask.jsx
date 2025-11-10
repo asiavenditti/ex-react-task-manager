@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useRef, useState } from 'react'
+import { GlobalContext } from '../context/GlobalContext'
 
 
 export default function AddTask() {
 
+    const { addTask } = useContext(GlobalContext)
 
-    const [taskName, setTaskName] = useState('')
+    const [taskTitle, setTaskTitle] = useState('')
     const [error, setError] = useState('')
     const descriptionRef = useRef(null)
     const statusRef = useRef(null)
@@ -14,9 +16,9 @@ export default function AddTask() {
 
 
 
-    function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        const errorMessage = validateTitle(taskName)
+        const errorMessage = validateTitle(taskTitle)
         if (errorMessage) {
             return setError(errorMessage)
         }
@@ -26,11 +28,24 @@ export default function AddTask() {
         const status = statusRef.current.value
 
         const newTask = {
-            title: taskName,
+            title: taskTitle,
             description: description,
             status: status
         }
-        console.log('Nuovo task creato:', newTask)
+
+        try {
+            await addTask(newTask)
+            alert('Task creata con successo')
+            setTaskTitle('')
+            descriptionRef.current.value = ('')
+            statusRef.current.value = ('')
+            console.log('Nuovo task creato:', newTask)
+
+
+        }
+        catch (error) {
+            alert(error.message)
+        }
 
     }
 
@@ -74,8 +89,8 @@ export default function AddTask() {
                                         type="text"
                                         id="taskName"
                                         className={`form-control ${error ? 'is-invalid' : ''}`}
-                                        value={taskName}
-                                        onChange={(e) => setTaskName(e.target.value)}
+                                        value={taskTitle}
+                                        onChange={(e) => setTaskTitle(e.target.value)}
                                         placeholder='Inserisci il nome del nuovo task'
                                     />
                                     {error && (

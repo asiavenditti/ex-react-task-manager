@@ -20,9 +20,26 @@ export default function useTasks() {
     }, [])
 
 
-    const addTask = (newTask) => {
-        console.log('Aggiunto elemento:', newTask)
-    }
+    const addTask = async (newTask) => {
+        try {
+            const response = await fetch(`${url}/tasks`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTask),
+            });
+
+            const { success, message, task } = await response.json();
+
+            if (!success) throw new Error(message);
+
+            setTasks((prevTasks) => [...prevTasks, task]);
+            console.log("Aggiunto elemento:", task);
+        } catch (error) {
+            console.error("Errore nell'aggiunta della task:", error.message);
+        }
+    };
+
+
 
     const removeTask = (taskId) => {
         console.log('Rimosso task:', taskId);
