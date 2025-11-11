@@ -1,9 +1,11 @@
 
 import { useState, useEffect } from "react"
 
+// Hook personalizzato per gestire le task
 
 export default function useTasks() {
 
+    // stato globale
     const [tasks, setTasks] = useState([])
 
 
@@ -20,6 +22,7 @@ export default function useTasks() {
     }, [])
 
 
+    // Funzione per aggiungere una nuova task
     const addTask = async (newTask) => {
         try {
             const response = await fetch(`${url}/tasks`, {
@@ -30,21 +33,41 @@ export default function useTasks() {
 
             const { success, message, task } = await response.json();
 
-            if (!success) throw new Error(message);
+            if (!success) throw new Error(message)
 
-            setTasks((prevTasks) => [...prevTasks, task]);
-            console.log("Aggiunto elemento:", task);
+            // aggiorno lo stato aggiungendo la nuova task in coda
+            setTasks((prevTasks) => [...prevTasks, task])
+            console.log("Aggiunto elemento:", task)
         } catch (error) {
-            console.error("Errore nell'aggiunta della task:", error.message);
+            console.error("Errore nell'aggiunta della task:", error.message)
+            throw error
         }
-    };
+    }
 
 
+    // Funzione per rimuovere una task
 
-    const removeTask = (taskId) => {
-        console.log('Rimosso task:', taskId);
+    const removeTask = async (taskId) => {
+        try {
+            const response = await fetch(`${url}/tasks/${taskId}`, {
+                method: 'DELETE'
+            })
+            const { success, message } = await response.json()
+            console.log('Rimosso task:', taskId);
+            // aggiorno lo stato rimuovendo la task con l'id corrispondente
+            setTasks(prevTasks => prevTasks.filter(task => task.id !== Number(taskId)))
+
+            if (!success) throw new Error(message)
+
+
+        } catch (error) {
+            console.error("Errore nella rimozione della task", error.message)
+            throw error
+        }
 
     }
+
+
 
     const updateTask = (updatedTask) => {
         console.log('Aggiornato task:', updatedTask)

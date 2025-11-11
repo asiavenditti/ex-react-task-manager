@@ -7,8 +7,10 @@ export default function AddTask() {
 
     const { addTask } = useContext(GlobalContext)
 
+    // input controllato
     const [taskTitle, setTaskTitle] = useState('')
     const [error, setError] = useState('')
+    // input non controllati
     const descriptionRef = useRef(null)
     const statusRef = useRef(null)
 
@@ -27,6 +29,7 @@ export default function AddTask() {
         const description = descriptionRef.current.value
         const status = statusRef.current.value
 
+        // costruisco il nuovo oggetto
         const newTask = {
             title: taskTitle,
             description: description,
@@ -49,21 +52,22 @@ export default function AddTask() {
 
     }
 
+    // Controllo se il titolo è valido
 
     const validateTitle = ((title) => {
-
+        // se il campo è vuoto
         if (title.trim() === '') {
             return 'Errore. Inserire il nome per proseguire'
         }
-
+        // se contiene caratteri speciali
         for (let char of title) {
             if (symbols.includes(char)) {
                 return 'Errore. Non sono consentiti caratteri speciali'
             }
-            return null
 
         }
 
+        return null
     })
 
 

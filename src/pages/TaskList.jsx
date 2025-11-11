@@ -16,6 +16,7 @@ export default function TaskList() {
     return (
         <div className="container mt-4">
             <h1>Lista Task</h1>
+
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -31,6 +32,7 @@ export default function TaskList() {
                     ))}
                 </tbody>
             </table>
-        </div>
+
+        </div >
     )
 }
