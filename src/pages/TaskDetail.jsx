@@ -1,7 +1,9 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { GlobalContext } from '../context/GlobalContext'
 import { useNavigate } from 'react-router-dom'
+import Modal from '../components/Modal'
+import EditTaskModal from '../components/EditTaskModal'
 
 
 export default function TaskDetail() {
@@ -9,7 +11,17 @@ export default function TaskDetail() {
     const { id } = useParams()
     const { tasks } = useContext(GlobalContext)
     const { removeTask } = useContext(GlobalContext)
+    const { updateTask } = useContext(GlobalContext)
     const navigate = useNavigate()
+
+    // stato della modale "elimina task"
+    const [showModal, setShowModal] = useState(false)
+
+    // stato della modale "modifica task"
+
+    const [showEditModal, setShowEditModal] = useState(false)
+
+
 
     // trovo il task corretto
     const task = tasks.find(t => t.id === parseInt(id))
@@ -33,7 +45,7 @@ export default function TaskDetail() {
 
 
     // funzione per gestire elimina al click
-    const handleDelete = async () => {
+    const handleConfirmDelete = async () => {
 
         try {
             await removeTask(task.id)
@@ -44,8 +56,25 @@ export default function TaskDetail() {
         } catch (error) {
             // alert con l'errore
             alert(error.message)
+        } finally {
+            setShowModal(false)
         }
     }
+
+
+    const handleSaveEdit = async (updatedTask) => {
+
+        try {
+            await updateTask(updatedTask)
+            alert('Task modificata con successo')
+            setShowEditModal(false)
+        }
+        catch (error) {
+            console.error(error.message)
+            alert('Si è verificato un errore nel tentativo di modifica', error.message)
+        }
+    }
+
 
 
     const statusStyle = (status) => {
@@ -77,15 +106,40 @@ export default function TaskDetail() {
                         {new Date(task.createdAt).toLocaleString()}
                     </p>
                 </div>
+
+
                 <div className="card-footer d-flex justify-content-end">
+                    <button onClick={() => setShowEditModal(true)}
+                        className='btn btn-primary me-2'
+                    >Modifica Task</button>
+                    <div className="modal-editing">
+                        <EditTaskModal
+                            show={showEditModal}
+                            onClose={() => setShowEditModal(false)}
+                            task={task}
+                            onSave={handleSaveEdit}
+                        />
+
+                    </div>
                     <button
                         className="btn btn-danger"
-                        onClick={handleDelete}
+                        onClick={() => setShowModal(true)}
                     >
                         Elimina Task
                     </button>
                 </div>
             </div>
+            <Modal
+                show={showModal}
+                title='Conferma'
+                content={<p>Sei sicuro di voler eliminare questa task?</p>}
+                onClose={() => setShowModal(false)}
+                onConfirm={handleConfirmDelete}
+                confirmText='Elimina'
+            />
+
         </div>
+
+
     )
 }

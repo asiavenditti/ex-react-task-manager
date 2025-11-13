@@ -54,10 +54,13 @@ export default function useTasks() {
             })
             const { success, message } = await response.json()
             console.log('Rimosso task:', taskId);
+
+            // controllo
+            if (!success) throw new Error(message)
+
             // aggiorno lo stato rimuovendo la task con l'id corrispondente
             setTasks(prevTasks => prevTasks.filter(task => task.id !== Number(taskId)))
 
-            if (!success) throw new Error(message)
 
 
         } catch (error) {
@@ -69,9 +72,29 @@ export default function useTasks() {
 
 
 
-    const updateTask = (updatedTask) => {
-        console.log('Aggiornato task:', updatedTask)
+    const updateTask = async (updatedTask) => {
+        try {
+
+            const response = await fetch(`${url}/tasks/${updatedTask.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedTask)
+            })
+            const data = await response.json()
+            if (!data.success) throw new Error(data.message)
+            setTasks(prevTasks =>
+                prevTasks.map((oldTask) => oldTask.id === updatedTask.id ? data.task : oldTask))
+            console.log('Task aggiornata con successo:', data.task)
+        } catch (error) {
+            console.error("Errore durante l'aggiornamento della task", error)
+            throw error
+        }
+
     }
+
+
 
     return { tasks, addTask, removeTask, updateTask }
 
