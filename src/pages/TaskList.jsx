@@ -26,7 +26,7 @@ export default function TaskList() {
 
     // funzione con debounce per aggiornare lo stato della ricerca
     const debounceSetSearch = useCallback(
-        debounce(setSearchQuery, 500), // 500ms di ritardo
+        debounce(setSearchQuery, 500),
         []
     )
 
@@ -40,7 +40,7 @@ export default function TaskList() {
         }
     }
 
-
+    // useMemo per calcoli costosi
     const filteredAndSortedTasks = useMemo(() => {
 
         // filtro per ricerca 

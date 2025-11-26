@@ -40,7 +40,7 @@ export default function TaskDetail() {
         }
     }, [task])
 
-    // se non c'è il task mostro messaggio
+
     if (!task) return <p className="text-center mt-5">Task non trovato</p>
 
 
@@ -49,19 +49,19 @@ export default function TaskDetail() {
 
         try {
             await removeTask(task.id)
-            // alert di successo
+
             alert("Task eliminata con successo")
-            // reinderizzamento
+
             navigate("/")
         } catch (error) {
-            // alert con l'errore
+
             alert(error.message)
         } finally {
             setShowModal(false)
         }
     }
 
-
+    // funzione per gestire il salvataggio
     const handleSaveEdit = async (updatedTask) => {
 
         try {

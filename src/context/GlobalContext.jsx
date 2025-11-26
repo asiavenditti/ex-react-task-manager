@@ -11,6 +11,7 @@ export default function GlobalProvider({ children }) {
 
     return (
 
+
         <GlobalContext.Provider value={taskData}>
             {children}
         </GlobalContext.Provider>

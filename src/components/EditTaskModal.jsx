@@ -39,6 +39,7 @@ export default function EditTaskModal({ show, onClose, task, onSave }) {
                 title="Modifica task"
                 onClose={onClose}
                 confirmText='Salva'
+                // requestSubmit per attivare il submit del form
                 onConfirm={() => editFormRef.current.requestSubmit()}
                 content={
 
